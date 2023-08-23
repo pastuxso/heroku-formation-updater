@@ -5,10 +5,8 @@ import * as go from "@aws-cdk/aws-lambda-go-alpha";
 
 const HEROKU_APP_NAME = process.env.HEROKU_APP_NAME as string;
 const HEROKU_API_TOKEN = process.env.HEROKU_API_TOKEN as string;
-const EVENTBRIDGE_CRON_EXPRESSION_ON = process.env
-  .EVENTBRIDGE_CRON_EXPRESSION_ON as string;
-const EVENTBRIDGE_CRON_EXPRESSION_OFF = process.env
-  .EVENTBRIDGE_CRON_EXPRESSION_OFF as string;
+const EVENTBRIDGE_CRON_EXPRESSION_ON = process.env.EVENTBRIDGE_CRON_EXPRESSION_ON as string;
+const EVENTBRIDGE_CRON_EXPRESSION_OFF = process.env.EVENTBRIDGE_CRON_EXPRESSION_OFF as string;
 const TIME_ZONE = process.env.TIME_ZONE as string;
 
 export class HerokuFormationUpdaterStack extends cdk.Stack {
@@ -32,21 +30,17 @@ export class HerokuFormationUpdaterStack extends cdk.Stack {
       },
     });
 
-    const invokeLambdaPolicy = new cdk.aws_iam.Policy(
-      this,
-      "invokeLambdaPolicy",
-      {
-        document: new cdk.aws_iam.PolicyDocument({
-          statements: [
-            new cdk.aws_iam.PolicyStatement({
-              actions: ["lambda:InvokeFunction"],
-              resources: [goLambda.functionArn],
-              effect: cdk.aws_iam.Effect.ALLOW,
-            }),
-          ],
-        }),
-      }
-    );
+    const invokeLambdaPolicy = new cdk.aws_iam.Policy(this, "invokeLambdaPolicy", {
+      document: new cdk.aws_iam.PolicyDocument({
+        statements: [
+          new cdk.aws_iam.PolicyStatement({
+            actions: ["lambda:InvokeFunction"],
+            resources: [goLambda.functionArn],
+            effect: cdk.aws_iam.Effect.ALLOW,
+          }),
+        ],
+      }),
+    });
 
     schedulerRole.attachInlinePolicy(invokeLambdaPolicy);
 
